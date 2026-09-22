@@ -46,8 +46,10 @@ class UsersController < ApplicationController
 
   private
 
+  # Signup may only assign the self-service attributes the form sends;
+  # privilege-bearing columns (admin, id, auth_token) are never mass-assignable.
   def user_params
-    params.require(:user).permit!
+    params.require(:user).permit(:email, :first_name, :last_name, :password, :password_confirmation)
   end
 
   # unpermitted attributes are ignored in production
