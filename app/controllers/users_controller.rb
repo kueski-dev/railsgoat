@@ -26,7 +26,10 @@ class UsersController < ApplicationController
   def update
     message = false
 
-    user = User.where("id = '#{params[:user][:id]}'")[0]
+    # The identifier is only ever passed as a bound value, never interpolated
+    # into a SQL fragment; anything that is not a plain integer matches no row.
+    requested_id = params[:user][:id].to_s
+    user = User.find_by(id: requested_id) if requested_id.match?(/\A\d+\z/)
 
     if user
       user.update(user_params_without_password)
@@ -46,8 +49,10 @@ class UsersController < ApplicationController
 
   private
 
+  # Signup may only assign the self-service attributes the form sends;
+  # privilege-bearing columns (admin, id, auth_token) are never mass-assignable.
   def user_params
-    params.require(:user).permit!
+    params.require(:user).permit(:email, :first_name, :last_name, :password, :password_confirmation)
   end
 
   # unpermitted attributes are ignored in production
