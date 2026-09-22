@@ -55,7 +55,13 @@ class ApplicationController < ActionController::Base
     Analytics.create({ ip_address: request.remote_ip, referrer: request.referrer, user_agent: request.user_agent})
   end
 
+  FONT_SIZE_PATTERN = /\A\d{1,3}(\.\d{1,2})?(px|pt|em|rem|%)\z/
+
+  # Returns the value only when it is a plain CSS size (number + unit); nil otherwise.
+  # Used both when storing the font cookie and when rendering it, so a planted cookie
+  # value never reaches the page.
   def sanitize_font(css)
-    css
+    value = css.to_s.strip
+    value.match?(FONT_SIZE_PATTERN) ? value : nil
   end
 end

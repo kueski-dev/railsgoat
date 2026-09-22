@@ -6,9 +6,10 @@ class DashboardController < ApplicationController
   def home
     @user = current_user
 
-    # See if the user has a font preference
+    # See if the user has a font preference; only a plain CSS size is persisted.
     if params[:font]
-      cookies[:font] = params[:font]
+      safe_font = sanitize_font(params[:font])
+      cookies[:font] = safe_font if safe_font
     end
   end
 
