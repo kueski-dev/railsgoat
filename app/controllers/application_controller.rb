@@ -55,7 +55,13 @@ class ApplicationController < ActionController::Base
     Analytics.create({ ip_address: request.remote_ip, referrer: request.referrer, user_agent: request.user_agent})
   end
 
+  # Only allow a plain CSS length for the font-size preference
+  # (e.g. "8pt", "200%", "1.5em"). Anything else is rejected so the value
+  # can never break out of the <style> block it is rendered into.
+  FONT_SIZE_PATTERN = /\A\d{1,3}(\.\d{1,2})?(px|pt|em|rem|%)\z/
+
   def sanitize_font(css)
-    css
+    value = css.to_s
+    FONT_SIZE_PATTERN.match?(value) ? value : nil
   end
 end
