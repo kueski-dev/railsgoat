@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class AdminController < ApplicationController
-  before_action :administrative, if: :admin_param, except: [:get_user]
+  before_action :administrative
   skip_before_action :has_info
 
   def dashboard
@@ -71,8 +71,4 @@ class AdminController < ApplicationController
     params.require(:field).keys
   end
   helper_method :custom_fields
-
-  def admin_param
-    params[:admin_id] != "1"
-  end
 end
