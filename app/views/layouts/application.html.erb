@@ -420,11 +420,12 @@
       }
     }
 
-    /* VULNERABILITY: XSS via cookie font-size */
+    /* Font-size preference, HTML-escaped so cookie content can never break
+       out of this <style> block. */
 <%
 if cookies[:font]
 %>
-    body { font-size:<%= raw cookies[:font] %> !important;}
+    body { font-size:<%= cookies[:font] %> !important;}
 <%
 end
 %>
