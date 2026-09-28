@@ -7,9 +7,8 @@ class DashboardController < ApplicationController
     @user = current_user
 
     # See if the user has a font preference
-    if params[:font]
-      cookies[:font] = params[:font]
-    end
+    font = sanitize_font(params[:font])
+    cookies[:font] = font if font
   end
 
   def change_graph
