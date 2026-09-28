@@ -420,11 +420,12 @@
       }
     }
 
-    /* VULNERABILITY: XSS via cookie font-size */
+    /* Font size preference: only a validated size (sanitize_font) is emitted */
 <%
-if cookies[:font]
+font_size = sanitize_font(cookies[:font])
+if font_size
 %>
-    body { font-size:<%= raw cookies[:font] %> !important;}
+    body { font-size:<%= font_size %> !important;}
 <%
 end
 %>
